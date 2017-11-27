@@ -119,6 +119,12 @@ public:
     QString getPlanarSerialPort() const;
 
     /**
+     * Get the baud radte of serial connection to Planar equipment.
+     * @return default value if unspecified.
+     */
+    int getPlanarBaudRate() const;
+
+    /**
      * Get the timeout in minutes after which the screns should be turned off.
      * @return default value if unspecified.
      */
@@ -214,6 +220,7 @@ private:
     QString _backgroundUri;
     QColor _backgroundColor;
 
+    int _planarBaudRate;
     QString _planarSerialPort;
     int _planarTimeout;
 

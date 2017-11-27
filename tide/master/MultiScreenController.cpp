@@ -37,7 +37,7 @@
 /* or implied, of Ecole polytechnique federale de Lausanne.          */
 /*********************************************************************/
 
-#include "PlanarController.h"
+#include "MultiScreenController.h"
 
 namespace
 {
@@ -45,8 +45,8 @@ const int serialTimeout = 1000;    // in ms
 const int powerStateTimer = 60000; // in ms
 }
 
-PlanarController::PlanarController(const QString& serialport,
-                                   const int baudrate)
+MultiScreenController::MultiScreenController(const QString& serialport,
+                                             const int baudrate)
 {
     _serial.setPortName(serialport);
     _serial.setBaudRate(baudrate, QSerialPort::AllDirections);
@@ -80,24 +80,24 @@ PlanarController::PlanarController(const QString& serialport,
     _timer.start(powerStateTimer);
 }
 
-bool PlanarController::powerOn()
+bool MultiScreenController::powerOn()
 {
     _serial.write("OPA1DISPLAY.POWER=ON\r");
     return _serial.waitForBytesWritten(serialTimeout);
 }
 
-bool PlanarController::powerOff()
+bool MultiScreenController::powerOff()
 {
     _serial.write("OPA1DISPLAY.POWER=OFF\r");
     return _serial.waitForBytesWritten(serialTimeout);
 }
 
-ScreenState PlanarController::getState() const
+ScreenState MultiScreenController::getState() const
 {
     return _state;
 }
 
-void PlanarController::checkPowerState()
+void MultiScreenController::checkPowerState()
 {
     _serial.write("OPA1DISPLAY.POWER?\r");
     _serial.waitForBytesWritten(serialTimeout);

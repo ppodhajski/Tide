@@ -493,8 +493,9 @@ void MasterApplication::_initRestInterface()
 #if TIDE_ENABLE_PLANAR_CONTROLLER
 void MasterApplication::_initPlanarController()
 {
-    _planarController.reset(
-        new PlanarController(_config->getPlanarSerialPort()));
+    _planarController.reset(new PlanarController(
+                                _config->getPlanarSerialPort()),
+                            _config->getPlanarBaudRate());
 
     connect(_inactivityTimer.get(), &InactivityTimer::poweroff, [this]() {
         _planarController->powerOff();

@@ -60,7 +60,7 @@ public:
      * @throw std::runtime_error if the port is already in use or a connection
      *        issue occured.
      */
-    PlanarController(const QString& serialport);
+    PlanarController(const QString& serialport, const int baudrate);
 
     /** Get the power state of Planar displays. */
     ScreenState getState() const;

@@ -48,6 +48,7 @@
 namespace
 {
 const int DEFAULT_WEBSERVICE_PORT = 8888;
+const int DEFAULT_PLANAR_BAUD_RATE = 9200;
 const int DEFAULT_PLANAR_TIMEOUT_MIN = 60;
 const QString DEFAULT_URL("http://www.google.com");
 const QString DEFAULT_WHITEBOARD_SAVE_FOLDER("/tmp/");
@@ -57,6 +58,7 @@ MasterConfiguration::MasterConfiguration(const QString& filename)
     : Configuration(filename)
     , _webServicePort(DEFAULT_WEBSERVICE_PORT)
     , _backgroundColor(Qt::black)
+    , _planarBaudRate(DEFAULT_PLANAR_BAUD_RATE)
     , _planarTimeout(DEFAULT_PLANAR_TIMEOUT_MIN)
 {
     loadMasterSettings();
@@ -138,6 +140,9 @@ void MasterConfiguration::loadPlanarSettings(QXmlQuery& query)
 
     query.setQuery("string(/configuration/planar/@timeout)");
     getInt(query, _planarTimeout);
+
+    query.setQuery("string(/configuration/planar/@baudrate)");
+    getInt(query, _planarBaudRate);
 }
 
 void MasterConfiguration::loadWebService(QXmlQuery& query)
@@ -201,6 +206,11 @@ QString MasterConfiguration::getInfoName() const
 QString MasterConfiguration::getPlanarSerialPort() const
 {
     return _planarSerialPort;
+}
+
+QString MasterConfiguration::getPlanarBaudRate() const
+{
+    return _planarBaudRate;
 }
 
 int MasterConfiguration::getPlanarTimeout() const
