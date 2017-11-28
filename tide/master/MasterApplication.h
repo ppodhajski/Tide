@@ -47,6 +47,7 @@
 
 #if TIDE_ENABLE_PLANAR_CONTROLLER
 #include "PlanarController.h"
+#include "ScreenControllerFactory.h"
 #endif
 
 #include <QApplication>

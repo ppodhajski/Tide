@@ -37,21 +37,17 @@
 /* or implied, of Ecole polytechnique federale de Lausanne.          */
 /*********************************************************************/
 
-#ifndef MultiScreenController_H
-#define MultiScreenController_H
+#ifndef ScreenControllerFactory_H
+#define ScreenControllerFactory_H
 
 #include "types.h"
 
-#include <QVector>
-
 #include <QObject>
-#include <QSerialPort>
-#include <QTimer>
 
 /**
  * Allow control of Planar device over serial connection.
  */
-class MultiScreenController : public QObject
+class ScreenControllerFactory : public QObject
 {
     Q_OBJECT
 
@@ -62,11 +58,10 @@ public:
      * @throw std::runtime_error if the port is already in use or a connection
      *        issue occured.
      */
-    MultiScreenController(QStringList vect, const int baudrate,
-                          SerialType type);
+    ScreenControllerFactory(const QString& ports,
+                            const MasterConfiguration& config);
 
 private:
-    QVector<QString> _vect;
 };
 
 #endif

@@ -85,6 +85,15 @@ enum class ScreenState
 };
 
 /**
+ * The power state of the wall's displays.
+ */
+enum class SerialType
+{
+    WALL,
+    TV
+};
+
+/**
  * The methods for synchronizing the GL buffer swap.
  */
 enum class SwapSync

@@ -208,7 +208,7 @@ QString MasterConfiguration::getPlanarSerialPort() const
     return _planarSerialPort;
 }
 
-QString MasterConfiguration::getPlanarBaudRate() const
+int MasterConfiguration::getPlanarBaudRate() const
 {
     return _planarBaudRate;
 }

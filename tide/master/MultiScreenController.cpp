@@ -38,6 +38,8 @@
 /*********************************************************************/
 
 #include "MultiScreenController.h"
+#include "MasterConfiguration.h"
+#include "PlanarController.h"
 
 namespace
 {
@@ -45,60 +47,15 @@ const int serialTimeout = 1000;    // in ms
 const int powerStateTimer = 60000; // in ms
 }
 
-MultiScreenController::MultiScreenController(const QString& serialport,
-                                             const int baudrate)
+MultiScreenController::MultiScreenController(QStringList vect,
+                                             const int baudrate,
+                                             SerialType type)
+
 {
-    _serial.setPortName(serialport);
-    _serial.setBaudRate(baudrate, QSerialPort::AllDirections);
-    _serial.setDataBits(QSerialPort::Data8);
-    _serial.setParity(QSerialPort::NoParity);
-    _serial.setStopBits(QSerialPort::OneStop);
-    _serial.setFlowControl(QSerialPort::NoFlowControl);
-    if (!_serial.open(QIODevice::ReadWrite))
-        throw std::runtime_error("Could not open " + serialport.toStdString());
-
-    connect(&_serial, &QSerialPort::readyRead, [this]() {
-        if (_serial.canReadLine())
-        {
-            QString output(_serial.readLine());
-            output = output.trimmed();
-            ScreenState previousState = _state;
-            if (output.endsWith("OFF") || output.endsWith("0"))
-                _state = ScreenState::OFF;
-            else if (output.endsWith("ON") || output.endsWith("1"))
-                _state = ScreenState::ON;
-            else
-                _state = ScreenState::UNDEF;
-
-            if (_state != previousState)
-                emit powerStateChanged(_state);
-        }
-    });
-
-    checkPowerState();
-    connect(&_timer, &QTimer::timeout, [this]() { checkPowerState(); });
-    _timer.start(powerStateTimer);
-}
-
-bool MultiScreenController::powerOn()
-{
-    _serial.write("OPA1DISPLAY.POWER=ON\r");
-    return _serial.waitForBytesWritten(serialTimeout);
-}
-
-bool MultiScreenController::powerOff()
-{
-    _serial.write("OPA1DISPLAY.POWER=OFF\r");
-    return _serial.waitForBytesWritten(serialTimeout);
-}
-
-ScreenState MultiScreenController::getState() const
-{
-    return _state;
-}
-
-void MultiScreenController::checkPowerState()
-{
-    _serial.write("OPA1DISPLAY.POWER?\r");
-    _serial.waitForBytesWritten(serialTimeout);
+    Q_UNUSED(vect);
+    Q_UNUSED(baudrate)
+    Q_UNUSED(type)
+    //    for (int i = 0; i < vect.length(); i++)
+    //        vect.append(new PlanarController(vect[i],
+    //        config.getPlanarBaudRate(), SerialType::WALL));
 }

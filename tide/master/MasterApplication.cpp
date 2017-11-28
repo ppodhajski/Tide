@@ -493,33 +493,36 @@ void MasterApplication::_initRestInterface()
 #if TIDE_ENABLE_PLANAR_CONTROLLER
 void MasterApplication::_initPlanarController()
 {
-    _planarController.reset(new PlanarController(
-                                _config->getPlanarSerialPort()),
-                            _config->getPlanarBaudRate());
+    ScreenControllerFactory(_config->getPlanarSerialPort(), *_config);
 
-    connect(_inactivityTimer.get(), &InactivityTimer::poweroff, [this]() {
-        _planarController->powerOff();
-        print_log(LOG_INFO, LOG_POWER,
-                  "Powering off the screens on inactivity timeout");
-    });
+//    _planarController.reset(new PlanarController(
+//                                _config->getPlanarSerialPort(),
+//                            _config->getPlanarBaudRate(), SerialType::WALL));
 
-    connect(_planarController.get(), &PlanarController::powerStateChanged,
-            [this](const ScreenState state) {
-                if (state == ScreenState::ON)
-                    _inactivityTimer->restart();
-                else
-                    _inactivityTimer->stop();
-            });
+//    connect(_inactivityTimer.get(), &InactivityTimer::poweroff, [this]() {
+//        _planarController->powerOff();
+//        print_log(LOG_INFO, LOG_POWER,
+//                  "Powering off the screens on inactivity timeout");
+//    });
 
-    connect(_planarController.get(), &PlanarController::powerStateChanged,
-            [this](const ScreenState state) {
-                if (state == ScreenState::OFF)
-                    _lock->unlock();
-            });
+//    connect(_planarController.get(), &PlanarController::powerStateChanged,
+//            [this](const ScreenState state) {
+//                if (state == ScreenState::ON)
+//                    _inactivityTimer->restart();
+//                else
+//                    _inactivityTimer->stop();
+//            });
+
+//    connect(_planarController.get(), &PlanarController::powerStateChanged,
+//            [this](const ScreenState state) {
+//                if (state == ScreenState::OFF)
+//                    _lock->unlock();
+//
+//});
 
 #if TIDE_ENABLE_REST_INTERFACE
-    connect(_planarController.get(), &PlanarController::powerStateChanged,
-            _logger.get(), &LoggingUtility::logScreenStateChanged);
+//    connect(_planarController.get(), &PlanarController::powerStateChanged,
+//            _logger.get(), &LoggingUtility::logScreenStateChanged);
 #endif
 }
 #endif

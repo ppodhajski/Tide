@@ -37,36 +37,29 @@
 /* or implied, of Ecole polytechnique federale de Lausanne.          */
 /*********************************************************************/
 
-#ifndef MultiScreenController_H
-#define MultiScreenController_H
+#include "ScreenControllerFactory.h"
+#include "MasterConfiguration.h"
+#include "MultiScreenController.h"
+#include "PlanarController.h"
+#include <QDebug>
 
-#include "types.h"
+ScreenControllerFactory::ScreenControllerFactory(
+    const QString& ports, const MasterConfiguration& config)
 
-#include <QVector>
-
-#include <QObject>
-#include <QSerialPort>
-#include <QTimer>
-
-/**
- * Allow control of Planar device over serial connection.
- */
-class MultiScreenController : public QObject
 {
-    Q_OBJECT
+    auto serialports = ports.split(';');
+    qDebug() << serialports;
 
-public:
-    /**
-     * Construct Planar equipment controller.
-     * @param serialport the serial port used to connect to Quad Controller
-     * @throw std::runtime_error if the port is already in use or a connection
-     *        issue occured.
-     */
-    MultiScreenController(QStringList vect, const int baudrate,
-                          SerialType type);
-
-private:
-    QVector<QString> _vect;
-};
-
-#endif
+    if (serialports.length() > 1)
+    {
+        QVector<PlanarController> vect;
+        for (int i = 0; i < vect.length(); i++)
+            vect.append(new MultiScreenController(serialports[i],
+                                                  config.getPlanarBaudRate(),
+                                                  SerialType::WALL));
+        //        return vect;
+    }
+    else
+        new PlanarController(serialports[0], config.getPlanarBaudRate(),
+                             SerialType::WALL);
+}

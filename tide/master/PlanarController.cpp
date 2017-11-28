@@ -46,7 +46,8 @@ const int powerStateTimer = 60000; // in ms
 }
 
 PlanarController::PlanarController(const QString& serialport,
-                                   const int baudrate)
+                                   const int baudrate, SerialType type)
+    : _type{type}
 {
     _serial.setPortName(serialport);
     _serial.setBaudRate(baudrate, QSerialPort::AllDirections);
@@ -82,13 +83,19 @@ PlanarController::PlanarController(const QString& serialport,
 
 bool PlanarController::powerOn()
 {
-    _serial.write("OPA1DISPLAY.POWER=ON\r");
+    if (_type == SerialType::TV)
+        _serial.write("OPA1DISPLAY.POWER=ON\r");
+    else
+        _serial.write("DISPLAY.POWER=ON\r");
     return _serial.waitForBytesWritten(serialTimeout);
 }
 
 bool PlanarController::powerOff()
 {
-    _serial.write("OPA1DISPLAY.POWER=OFF\r");
+    if (_type == SerialType::TV)
+        _serial.write("OPA1DISPLAY.POWER=OFF\r");
+    else
+        _serial.write("OPA1DISPLAY.POWER=OFF\r");
     return _serial.waitForBytesWritten(serialTimeout);
 }
 
@@ -99,6 +106,9 @@ ScreenState PlanarController::getState() const
 
 void PlanarController::checkPowerState()
 {
-    _serial.write("OPA1DISPLAY.POWER?\r");
+    if (_type == SerialType::TV)
+        _serial.write("OPA1DISPLAY.POWER?\r");
+    else
+        _serial.write("OPA1DISPLAY.POWER?\r");
     _serial.waitForBytesWritten(serialTimeout);
 }
